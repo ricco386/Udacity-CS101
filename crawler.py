@@ -52,10 +52,12 @@ def crawl_web(seed):
 def add_to_index(index,keyword,url):
     for entry in index:
         if entry[0] == keyword:
-            if not url in entry[1]:
-                entry[1].append(url)
+            for element in entry:
+                if element[0] == url:
+                    return
+            entry[1].append([url, 0])
             return
-    index.append([keyword, [url]])
+    index.append([keyword, [[url, 0]]])
 
 def lookup(index,keyword):
     for entry in index:
@@ -68,5 +70,11 @@ def add_page_to_index(index,url,content):
     for keyword in words:
         add_to_index(index,keyword,url)
 
+def record_user_click(index,keyword,url):
+    urls = lookup(index, keyword)
+        if urls:
+            for entry in urls:
+                if entry[0] == url:
+                    entry[1] += 1
 
 print crawl_web('http://xkcd.com/353')
