@@ -50,3 +50,23 @@ def crawl_web(seed):
             crawled.append(page)
     return crawled
 
+
+
+# Indexing
+def add_to_index(index,keyword,url):
+	for entry in index:
+		if entry[0] == keyword:
+			entry[1].append(url)
+			return
+	index.append([keyword, [url]])
+
+def lookup(index,keyword):
+    for entry in index:
+        if entry[0] == keyword:
+		return entry[1]
+	return []
+
+
+
+
+print crawl_web('http://xkcd.com/353')
