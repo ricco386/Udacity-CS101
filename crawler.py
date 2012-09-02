@@ -3,7 +3,7 @@
 def get_page(url):
     # This is a simulated get_page procedure so that you can test your
     # code on two pages "http://xkcd.com/353" and "http://xkcd.com/554".
-    # A procedure which actually grabs a page from the web will be 
+    # A procedure which actually grabs a page from the web will be
     # introduced in unit 4.
     try:
         if url == "http://xkcd.com/353":
@@ -16,7 +16,7 @@ def get_page(url):
 
 def get_next_target(page):
     start_link = page.find('<a href=')
-    if start_link == -1: 
+    if start_link == -1:
         return None, 0
     start_quote = page.find('"', start_link)
     end_quote = page.find('"', start_quote + 1)
@@ -54,19 +54,22 @@ def crawl_web(seed):
 
 # Indexing
 def add_to_index(index,keyword,url):
-	for entry in index:
-		if entry[0] == keyword:
-			entry[1].append(url)
-			return
-	index.append([keyword, [url]])
+    for entry in index:
+        if entry[0] == keyword:
+            entry[1].append(url)
+            return
+    index.append([keyword, [url]])
 
 def lookup(index,keyword):
     for entry in index:
         if entry[0] == keyword:
-		return entry[1]
-	return []
+        return entry[1]
+    return []
 
-
+def add_page_to_index(index,url,content):
+    words = content.split()
+    for keyword in words:
+        add_to_index(index,keyword,url)
 
 
 print crawl_web('http://xkcd.com/353')
