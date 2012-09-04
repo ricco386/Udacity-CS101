@@ -44,7 +44,7 @@ def get_all_links(page):
 def crawl_web(seed):
     tocrawl = [seed]
     crawled = []
-    index = []
+    index = {}
     while tocrawl:
         page = tocrawl.pop()
         if page not in crawled:
@@ -60,21 +60,18 @@ def crawl_web(seed):
 
 # Function that add word to the index
 def add_to_index(index,keyword,url):
-    for entry in index:
-        if entry[0] == keyword:
-            for element in entry:
-                if element[0] == url:
-                    return
-            entry[1].append([url, 0])
-            return
-    index.append([keyword, [[url, 0]]])
+    if keyword in index:
+        index[keyword].append(url)
+    else:
+        # not found, add new keyword to index
+        index[keyword] = [url]
 
 # Help function that search the index for the keyword
 def lookup(index,keyword):
-    for entry in index:
-        if entry[0] == keyword:
-        return entry[1]
-    return []
+    if keyword in index:
+        return index[keyword]
+    else:
+        return None
 
 # Function that splits page into words and adds them to index
 def add_page_to_index(index,url,content):
