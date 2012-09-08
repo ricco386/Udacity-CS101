@@ -45,14 +45,17 @@ def crawl_web(seed):
     tocrawl = [seed]
     crawled = []
     index = {}
+    graph = {}
     while tocrawl:
         page = tocrawl.pop()
         if page not in crawled:
             content = get_page(page)
             add_page_to_index(index,page,content)
-            union(tocrawl, get_all_links(content))
+            outlinks = get_all_links(content)
+            graph[page] = outlinks
+            union(tocrawl, outlinks)
             crawled.append(page)
-    return index
+    return index, graph
 
 #
 # Functions required for indexing, crawled pages
@@ -82,9 +85,14 @@ def add_page_to_index(index,url,content):
 # Function for recording cliks on a particular link
 def record_user_click(index,keyword,url):
     urls = lookup(index, keyword)
-        if urls:
-            for entry in urls:
-                if entry[0] == url:
-                    entry[1] += 1
+    if urls:
+        for entry in urls:
+            if entry[0] == url:
+                entry[1] += 1
 
-print crawl_web('http://xkcd.com/353')
+index, graph = crawl_web('http://www.udacity.com/cs101x/urank/index.html');
+
+print "\n Index: \n"
+print index
+print "\n Graph: \n"
+print graph
