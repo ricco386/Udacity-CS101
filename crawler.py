@@ -90,6 +90,10 @@ def record_user_click(index,keyword,url):
             if entry[0] == url:
                 entry[1] += 1
 
+#
+# Functions required for ranking
+#
+
 # Function that computes page ranks
 #
 # Formula to count rank:
@@ -122,12 +126,28 @@ def compute_ranks(graph):
         ranks = newranks
     return ranks
 
-index, graph = crawl_web('http://www.udacity.com/cs101x/urank/index.html');
+# Function that returns the one URL most likely to be the best site for that
+# keyword. If the keyword does not appear in the index return None
+def lucky_search(index, ranks, keyword):
+    return_url = '';
+    if keyword not in index:
+        return None
+    for url in index[keyword]:
+        if url in ranks:
+            if return_url != '':
+                if ranks[url] > ranks[return_url]:
+                    return_url = url
+            else:
+                return_url = url
+    return return_url
 
+index, graph = crawl_web('http://www.udacity.com/cs101x/urank/index.html');
 #print "\n Index: \n"
 #print index
 #print "\n Graph: \n"
 #print graph
 
 ranks = compute_ranks(graph)
-print ranks
+#print ranks
+
+print lucky_search(index, ranks, 'Hummus')
