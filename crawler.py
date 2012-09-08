@@ -141,6 +141,28 @@ def lucky_search(index, ranks, keyword):
                 return_url = url
     return return_url
 
+# Function that returns the list of all URLs for that keyword. Ordered by page
+# rank. If the keyword does not appear in the index return None
+def ordered_search(index, ranks, keyword):
+    pages = lookup(index, keyword)
+    return quick_sort(pages, ranks)
+
+# Help function that uses quick sort algorithm to order array
+def quick_sort(pages, ranks):
+    if not pages or len(pages) <= 1:
+        return pages
+    else:
+        pivot = ranks[pages[0]] #find pivot
+        worse = []
+        better = []
+        for page in pages[1:]:
+            if ranks[page] <= pivot:
+                worse.append(page)
+            else:
+                better.append(page)
+    return quick_sort(better, ranks) + [pages[0]] + quick_sort(worse, ranks)
+
+
 index, graph = crawl_web('http://www.udacity.com/cs101x/urank/index.html');
 #print "\n Index: \n"
 #print index
@@ -150,4 +172,4 @@ index, graph = crawl_web('http://www.udacity.com/cs101x/urank/index.html');
 ranks = compute_ranks(graph)
 #print ranks
 
-print lucky_search(index, ranks, 'Hummus')
+print ordered_search(index, ranks, 'Hummus')
